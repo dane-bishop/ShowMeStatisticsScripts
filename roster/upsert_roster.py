@@ -3,9 +3,9 @@ def upsert_roster(conn, team_season_id: int, people):
         for p in people:
             # players
             cur.execute("""
-                INSERT INTO players (full_name, mu_player_slug, mu_player_id)
+                INSERT INTO players (full_name, player_slug, player_id)
                 VALUES (%s, %s, %s)
-                ON CONFLICT (mu_player_slug, mu_player_id)
+                ON CONFLICT (player_slug, player_id)
                 DO UPDATE SET full_name = EXCLUDED.full_name
                 RETURNING id
             """, (p["full_name"], p["slug"], p["mu_player_id"]))
