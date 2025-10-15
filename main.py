@@ -7,7 +7,7 @@ from helpers.core import get_db_connection
 from schedule.ensure_team_season import ensure_team_season
 
 conn = get_db_connection()
-tsid = ensure_team_season()
+tsid = ensure_team_season(conn)
 
 # tsid already exists (team_season 2025)
 people = list(get_roster('baseball', 2025))
