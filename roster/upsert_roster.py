@@ -1,4 +1,6 @@
 def upsert_roster(conn, team_season_id: int, people):
+    
+    print(f"Upserting roster for Team Season ID: {team_season_id}")
     with conn, conn.cursor() as cur:
         for p in people:
             # players
