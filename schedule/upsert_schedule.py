@@ -1,12 +1,12 @@
-# schedule/upsert_schedule.py
+from helpers.core import BASE
+
+# upsert_schedule.py (guarded)
 def upsert_schedule(conn, team_season_id: int, games_iter):
     with conn, conn.cursor() as cur:
         for g in games_iter:
             opp_name = g.get("opponent_name")
             if not opp_name:
-                # Fall back: log and skip this line to avoid NOT NULL violation
-                raw = g.get("raw_line", "")
-                print(f"[skip:opponent-null] {g.get('game_date')} {g.get('location')} :: {raw}")
+                print(f"[skip:opponent-null] {g['game_date']} {g.get('location')}")
                 continue
 
             # opponent
@@ -48,15 +48,11 @@ def upsert_schedule(conn, team_season_id: int, games_iter):
             # game
             cur.execute("""
                 INSERT INTO games
-                  (team_season_id, game_date, location, opponent_id, venue_id, result, score_for, score_against, source_url)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                  (team_season_id, game_date, location, opponent_id, venue_id, source_url)
+                VALUES (%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (team_season_id, game_date, opponent_id, location)
-                DO UPDATE SET result=EXCLUDED.result,
-                              score_for=EXCLUDED.score_for,
-                              score_against=EXCLUDED.score_against,
-                              venue_id = COALESCE(EXCLUDED.venue_id, games.venue_id),
-                              source_url = EXCLUDED.source_url
+                DO NOTHING
             """, (
                 team_season_id, g["game_date"], g.get("location"), opp_id, venue_id,
-                g.get("result"), g.get("score_for"), g.get("score_against"), g.get("source")
+                f"{BASE}/sports/baseball/schedule/{g['game_date'].year}"
             ))
