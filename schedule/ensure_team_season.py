@@ -1,4 +1,4 @@
-def ensure_team_season(conn, school="Missouri", sport_key="baseball", sport_name="Baseball", year=2025, sport_slug="baseball"):
+def ensure_team_season(conn, school, sport_key, sport_name, year, sport_slug):
     with conn, conn.cursor() as cur:
         cur.execute("INSERT INTO sports(key,name) VALUES(%s,%s) ON CONFLICT (key) DO UPDATE SET name=EXCLUDED.name RETURNING id",
                     (sport_key, sport_name))

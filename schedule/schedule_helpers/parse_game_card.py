@@ -1,6 +1,6 @@
 from datetime import datetime
 import re
-from schedule.schedule_helpers.clean_opponent import clean_opponent
+from schedule.schedule_helpers.clean_opponent import _clean_opponent
 
 
 def parse_game_card(card, year):
@@ -25,7 +25,7 @@ def parse_game_card(card, year):
     # opponent
     oppNode = card.select_one('[data-test-id="s-game-card-opponent-name"]') \
               or card.select_one('.opponent-name, [data-test-id*="opponent"]')
-    opponent = clean_opponent(oppNode.get_text(" ", strip=True) if oppNode else None)
+    opponent = _clean_opponent(oppNode.get_text(" ", strip=True) if oppNode else None)
 
     # venue city/state (if shown on card)
     locDetail = card.select_one('[data-test-id="s-game-card-location-detail"]')

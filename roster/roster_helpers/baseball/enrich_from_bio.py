@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from helpers.core import BASE
-from helpers.fetch import fetch
+from helpers._etch import fetch
 from roster.roster_helpers.text import text
 import re
 
