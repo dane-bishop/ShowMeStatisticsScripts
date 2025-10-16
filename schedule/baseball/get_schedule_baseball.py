@@ -11,7 +11,7 @@ from schedule.schedule_helpers.parse_game_card_any import parse_game_card_any
 from schedule.schedule_helpers.parse_text_schedule import parse_text_schedule
 
 
-def get_schedule_html(sport_slug: str, year: int, debug=False):
+def get_schedule_baseball(sport_slug: str, year: int, debug=False):
     sess = make_session()
     url = f"{BASE}/sports/{sport_slug}/schedule/{year}"
     soup = BeautifulSoup(_fetch(url, sess), "lxml")

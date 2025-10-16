@@ -1,6 +1,6 @@
 from helpers.core import BASE
 
-def upsert_schedule(conn, team_season_id: int, games_iter):
+def upsert_schedule_baseball(conn, team_season_id: int, games_iter):
     with conn, conn.cursor() as cur:
         for g in games_iter:
             if not g.get("game_date"):

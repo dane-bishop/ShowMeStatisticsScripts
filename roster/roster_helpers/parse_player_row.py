@@ -1,6 +1,6 @@
-from roster.roster_helpers.text import text
+from helpers.text import text
 from helpers.core import COACH_WORDS
-from roster.roster_helpers.strip_label import strip_label
+from helpers.strip_label import strip_label
 import re
 
 

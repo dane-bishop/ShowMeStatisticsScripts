@@ -5,10 +5,10 @@ from helpers.core import BASE
 from bs4 import BeautifulSoup
 from roster.roster_helpers.parse_player_row import parse_player_row
 from urllib.parse import urljoin
-from roster.roster_helpers.needs_enrich import needs_enrich
+from roster.roster_helpers.baseball.needs_enrich import needs_enrich
 from helpers.strip_sr_only_value import strip_sr_only_value
 from helpers.only_digits import only_digits
-from helpers.extract_bats_throws_from_card import extract_bats_throws_from_card, BT_PAT
+from helpers.baseball.extract_bats_throws_from_card import extract_bats_throws_from_card, BT_PAT
 
 
 
@@ -35,7 +35,7 @@ def _find_label(soup: BeautifulSoup, *labels) -> str | None:
     return lab.get_text(" ", strip=True) or None
 
 
-def get_roster(sport_slug: str, year: int):
+def get_roster_baseball(sport_slug: str, year: int):
     sess = make_session()
     roster_url = f"{BASE}/sports/{sport_slug}/roster/{year}"
     soup = BeautifulSoup(sess.get(roster_url, timeout=12).text, "lxml")

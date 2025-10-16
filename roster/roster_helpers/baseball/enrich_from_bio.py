@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from helpers.core import BASE
 from helpers._etch import fetch
-from roster.roster_helpers.text import text
+from helpers.text import text
 import re
 
 
