@@ -40,5 +40,5 @@ sess = Session()
 player_url = f"{BASE}/sports/baseball/roster/jackson-lovich/26046"
 
 data = get_player_hitting(sess, player_url)
-upsert_player_batting_gamelog(conn, player_id=, rows=data["gamelog"])
-upsert_player_hitting_season_highs(conn, player_id=, highs=data["season_highs"])
+upsert_player_batting_gamelog(conn, player_id=4, rows=data["gamelog"])
+upsert_player_hitting_season_highs(conn, player_id=4, highs=data["season_highs"])
