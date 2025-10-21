@@ -1,12 +1,10 @@
 # main.py (sketch)
 from roster.get_roster_baseball import get_roster_baseball
-from schedule.upsert_schedule_baseball import upsert_schedule_baseball
-from schedule.get_schedule_baseball import get_schedule_baseball
 from roster.upsert_roster_baseball import upsert_roster_baseball
 from helpers.core import get_db_connection
 from schedule.schedule_helpers.ensure_team_season import ensure_team_season
 from requests import Session 
-from stats.parse_player_hitting import get_player_hitting
+from stats.parse_player_hitting import get_player_hitting_mu
 from stats.upsert_player_hitting import upsert_player_batting_gamelog, upsert_player_hitting_season_highs
 from helpers.core import BASE
 
@@ -35,10 +33,17 @@ for game in get_schedule_baseball('baseball', 2025, debug=False):
 
 '''
 
+
+
 # GET BASEBALL PLAYER STATS BY PLAYER LINK
 sess = Session()
-player_url = f"{BASE}/sports/baseball/roster/jackson-lovich/26046"
+player_id = 4                
+roster_player_id = 26046      
+year = 2025
 
-data = get_player_hitting(sess, player_url)
-upsert_player_batting_gamelog(conn, player_id=4, rows=data["gamelog"])
-upsert_player_hitting_season_highs(conn, player_id=4, highs=data["season_highs"])
+parsed = get_player_hitting_mu(sess, roster_player_id, year)
+print("first 2 rows:", parsed["gamelog"][:2])
+
+
+upsert_player_batting_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
+upsert_player_hitting_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
