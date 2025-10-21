@@ -37,13 +37,32 @@ for game in get_schedule_baseball('baseball', 2025, debug=False):
 
 # GET BASEBALL PLAYER STATS BY PLAYER LINK
 sess = Session()
-player_id = 4                
-roster_player_id = 26046      
+#player_id = 4  
+#roster_player_id = 26046      
 year = 2025
 
-parsed = get_player_hitting_mu(sess, roster_player_id, year)
-print("first 2 rows:", parsed["gamelog"][:2])
+with conn.cursor() as cur:
+    cur.execute("""
+    SELECT p.id, p.player_id 
+    FROM players p
+    JOIN roster_memberships rm 
+    ON rm.player_id = p.id
+    WHERE rm.position IS NOT NULL AND UPPER(rm.position) NOT IN ('RHP', 'LHP')
+                
+    """)
+    batters = cur.fetchall()
 
 
-upsert_player_batting_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
-upsert_player_hitting_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
+
+print(f"Adding data for {len(batters)} batters")
+
+
+for (player_id, roster_player_id) in batters:
+    print(f"Player ID: {player_id} - Roster Player ID: {roster_player_id}")
+
+    parsed = get_player_hitting_mu(sess, roster_player_id, year)
+    print("first 2 rows:", parsed["gamelog"][:2])
+
+
+    upsert_player_batting_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
+    upsert_player_hitting_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
