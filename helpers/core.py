@@ -8,7 +8,7 @@ HDRS = {"User-Agent": "Mozilla/5.0 (+data-ingest)"}
 COACH_WORDS = re.compile(r"coach|director|ops|operations|trainer|analyst|staff", re.I)
 
 
-
+API_TEMPLATE = "https://mutigers.com/api/v2/stats/bio?rosterPlayerId={pid}&sport=baseball&year={year}"
 
 
 def get_db_connection():

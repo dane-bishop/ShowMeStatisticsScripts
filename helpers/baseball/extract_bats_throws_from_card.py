@@ -65,3 +65,6 @@ def extract_bats_throws_from_card(card) -> str | None:
 
 # Export a pattern for bio-page fallback (captures L/R/S after normalization)
 BT_PAT = re.compile(r"[LRS]\s*[\/\|\u2044]\s*[LRS]", re.I)
+
+
+

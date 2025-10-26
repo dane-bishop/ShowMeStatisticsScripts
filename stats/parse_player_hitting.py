@@ -3,11 +3,15 @@ from __future__ import annotations
 from typing import Any, Dict, List, Iterable, Optional
 from datetime import datetime
 import re
+from stats.stats_helpers.fetch_mu_player_json import fetch_mu_player_json
+from stats.stats_helpers.extract_sgid import _source_game_id_from_url
+from stats.stats_helpers.clean_int import _to_double
+from stats.stats_helpers.clean_int import _to_int
 
-API_TEMPLATE = "https://mutigers.com/api/v2/stats/bio?rosterPlayerId={pid}&sport=baseball&year={year}"
+
 
 def _clean_space(s: str) -> str:
-    # replace narrow/nb spaces commonly found before AM/PM
+    
     return s.replace("\u202f", " ").replace("\xa0", " ").strip()
 
 def _parse_dt(s: Optional[str]) -> Optional[datetime]:
@@ -21,28 +25,9 @@ def _parse_dt(s: Optional[str]) -> Optional[datetime]:
             pass
     return None
 
-def _to_int(x) -> Optional[int]:
-    if x is None:
-        return None
-    try:
-        return int(str(x).strip())
-    except Exception:
-        return None
 
-def _source_game_id_from_url(url: Optional[str]) -> Optional[str]:
-    if not url:
-        return None
-    m = re.search(r'/boxscore/(\d+)', url)
-    return m.group(1) if m else None
 
-def fetch_mu_player_json(sess, roster_player_id: int, year: int) -> Dict[str, Any]:
-    url = API_TEMPLATE.format(pid=roster_player_id, year=year)
-    # headers help some SIDEARM setups
-    sess.headers.setdefault("Accept", "application/json, text/plain, */*")
-    sess.headers.setdefault("Referer", f"https://mutigers.com/sports/baseball/roster/{roster_player_id}")
-    r = sess.get(url, timeout=20)
-    r.raise_for_status()
-    return r.json()
+
 
 def parse_player_hitting_from_mu(payload: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
     # ---- Game log ----

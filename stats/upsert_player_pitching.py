@@ -8,20 +8,12 @@ from stats.stats_helpers.coerce_int import _coerce_int
 from stats.stats_helpers.extract_sgid import _extract_sgid
 
 
-
-
-
-
-
-
-
-
-
-def upsert_player_batting_gamelog(conn, player_id: int, rows: Iterable[Dict[str, Any]]):
+def upsert_player_pitching_gamelog(conn, player_id: int, rows: Iterable[Dict[str, Any]]):
 
     inserted = updated = skipped = 0
     with conn, conn.cursor() as cur:
         for g in rows:
+
             sgid = g.get("source_game_id")
             game_id = _find_game_id_by_source(cur, sgid) if sgid else None
     
@@ -30,9 +22,9 @@ def upsert_player_batting_gamelog(conn, player_id: int, rows: Iterable[Dict[str,
                 continue
 
             cur.execute("""
-                INSERT INTO player_game_batting (
-                    player_id, game_id, source_game_id, wl, gs, ab, r, h, rbi,
-                    doubles, triples, hr, bb, ibb, sb, sba, cs, hbp, sh, sf, gdp, k, avg
+                INSERT INTO player_game_pitching (
+                    player_id, game_id, source_game_id, wl, ip, h, r, er, bb,
+                    so, doubles, triples, hr, wp, bk, hbp, ibb, np, w, l, sv, gera, sera
                 ) VALUES (
                     %s,%s,%s,%s,%s,%s,%s,%s,%s,
                     %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
@@ -40,33 +32,33 @@ def upsert_player_batting_gamelog(conn, player_id: int, rows: Iterable[Dict[str,
                 ON CONFLICT (player_id, game_id)
                 DO UPDATE SET
                     wl      = COALESCE(EXCLUDED.wl, player_game_batting.wl),
-                    gs      = COALESCE(EXCLUDED.gs, player_game_batting.gs),
-                    ab      = COALESCE(EXCLUDED.ab, player_game_batting.ab),
+                    ip      = COALESCE(EXCLUDED.ip, player_game_batting.ip),
+                    h      = COALESCE(EXCLUDED.h, player_game_batting.h),
                     r       = COALESCE(EXCLUDED.r, player_game_batting.r),
-                    h       = COALESCE(EXCLUDED.h, player_game_batting.h),
-                    rbi     = COALESCE(EXCLUDED.rbi, player_game_batting.rbi),
+                    er       = COALESCE(EXCLUDED.er, player_game_batting.er),
+                    bb     = COALESCE(EXCLUDED.bb, player_game_batting.bb),
+                    so = COALESCE(EXCLUDED.so, player_game_batting.so),
                     doubles = COALESCE(EXCLUDED.doubles, player_game_batting.doubles),
-                    triples = COALESCE(EXCLUDED.triples, player_game_batting.triples),
+                    triples      = COALESCE(EXCLUDED.triples, player_game_batting.triples),
                     hr      = COALESCE(EXCLUDED.hr, player_game_batting.hr),
-                    bb      = COALESCE(EXCLUDED.bb, player_game_batting.bb),
-                    ibb     = COALESCE(EXCLUDED.ibb, player_game_batting.ibb),
-                    sb      = COALESCE(EXCLUDED.sb, player_game_batting.sb),
-                    sba     = COALESCE(EXCLUDED.sba, player_game_batting.sba),
-                    cs      = COALESCE(EXCLUDED.cs, player_game_batting.cs),
+                    wp     = COALESCE(EXCLUDED.wp, player_game_batting.wp),
+                    bk      = COALESCE(EXCLUDED.bk, player_game_batting.bk),
                     hbp     = COALESCE(EXCLUDED.hbp, player_game_batting.hbp),
-                    sh      = COALESCE(EXCLUDED.sh, player_game_batting.sh),
-                    sf      = COALESCE(EXCLUDED.sf, player_game_batting.sf),
-                    gdp     = COALESCE(EXCLUDED.gdp, player_game_batting.gdp),
-                    k       = COALESCE(EXCLUDED.k, player_game_batting.k),
-                    avg     = COALESCE(EXCLUDED.avg, player_game_batting.avg)
+                    ibb      = COALESCE(EXCLUDED.ibb, player_game_batting.ibb),
+                    np     = COALESCE(EXCLUDED.np, player_game_batting.np),
+                    w      = COALESCE(EXCLUDED.w, player_game_batting.w),
+                    l      = COALESCE(EXCLUDED.l, player_game_batting.l),
+                    sv     = COALESCE(EXCLUDED.sv, player_game_batting.sv),
+                    gera       = COALESCE(EXCLUDED.gera, player_game_batting.gera),
+                    sera     = COALESCE(EXCLUDED.sera, player_game_batting.sera)
             """, (
-                player_id, game_id, sgid, g.get("wl"), g.get("gs"),
-                g.get("ab"), g.get("r"), g.get("h"), g.get("rbi"),
-                g.get("doubles"), g.get("triples"), g.get("hr"), g.get("bb"), g.get("ibb"),
-                g.get("sb"), g.get("sba"), g.get("cs"), g.get("hbp"), g.get("sh"),
-                g.get("sf"), g.get("gdp"), g.get("k"), g.get("avg")
+                player_id, game_id, sgid, g.get("wl"), g.get("ip"),
+                g.get("h"), g.get("r"), g.get("er"), g.get("bb"),
+                g.get("so"), g.get("doubles"), g.get("triples"), g.get("hr"), g.get("wp"),
+                g.get("bk"), g.get("hbp"), g.get("ibb"), g.get("np"), g.get("w"),
+                g.get("l"), g.get("sv"), g.get("gera"), g.get("sera")
             ))
-            print(f"Attributes: AB {g.get("ab")}, H: {g.get("h")}")
+            print(f"Attributes: IP {g.get("ip")}, ERA: {g.get("sera")}")
             if cur.rowcount == 1:
                 inserted += 1
             else:
@@ -78,21 +70,8 @@ def upsert_player_batting_gamelog(conn, player_id: int, rows: Iterable[Dict[str,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-def upsert_player_hitting_season_highs(conn, player_id: int, highs):
+def upsert_player_pitching_season_highs(conn, player_id: int, highs):
     
-
     inserted = updated = skipped = 0
 
     with conn, conn.cursor() as cur:
