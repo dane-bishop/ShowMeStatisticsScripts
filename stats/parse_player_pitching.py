@@ -42,7 +42,7 @@ def parse_player_pitching_from_mu(payload: Dict[str, Any]) -> Dict[str, List[Dic
             "np": _to_int(g.get("pitches")),
             "w": _to_int(g.get("pitchingWins")),
             "l": _to_int(g.get("pitchingLosses")),
-            "s": _to_int(g.get("saves")),
+            "sv": _to_int(g.get("saves")),
             "gera": _to_double(g.get("gameEarnedRunAverage")),
             "sera": _to_double(g.get("earnedRunAverage")),  
         }
