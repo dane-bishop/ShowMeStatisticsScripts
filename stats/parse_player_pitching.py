@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Iterable, Optional
 from datetime import datetime
 import re
-from stats.parse_player_hitting import _parse_dt, _to_int, _source_game_id_from_url, fetch_mu_player_json, _to_double, API_TEMPLATE
+from stats.parse_player_hitting import _parse_dt, _to_int, _source_game_id_from_url, fetch_mu_player_json, _to_double
 
 def parse_player_pitching_from_mu(payload: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
     # ---- Game log ----
@@ -43,8 +43,8 @@ def parse_player_pitching_from_mu(payload: Dict[str, Any]) -> Dict[str, List[Dic
             "w": _to_int(g.get("pitchingWins")),
             "l": _to_int(g.get("pitchingLosses")),
             "s": _to_int(g.get("saves")),
-            "gera": _to_int(g.get("gameEarnedRunAverage")),
-            "sera": _to_int(g.get("earnedRunAverage")),  
+            "gera": _to_double(g.get("gameEarnedRunAverage")),
+            "sera": _to_double(g.get("earnedRunAverage")),  
         }
         gamelog.append(row)
 

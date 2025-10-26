@@ -85,7 +85,7 @@ with conn.cursor() as cur:
     FROM players p
     JOIN roster_memberships rm
     ON rm.player_id = p.id
-    WHERE rm.position IS NOT NULL AND UPPER(rm.position) LIKE ANY (ARRAY['%RHP%', '%LHP%])
+    WHERE rm.position IS NOT NULL AND UPPER(rm.position) LIKE ANY (ARRAY['%RHP%', '%LHP%'])
     """)
     pitchers = cur.fetchall()
 
