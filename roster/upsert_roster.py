@@ -1,5 +1,5 @@
 # upsert_roster.py
-def upsert_roster_baseball(conn, team_season_id: int, people):
+def upsert_roster(conn, team_season_id: int, people):
 
 
     print(f"Upserting roster for Team Season ID: {team_season_id}")

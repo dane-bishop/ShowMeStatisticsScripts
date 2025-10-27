@@ -7,7 +7,7 @@ from stats.stats_helpers.fetch_mu_player_json import fetch_mu_player_json
 from stats.stats_helpers.extract_sgid import _source_game_id_from_url
 from stats.stats_helpers.clean_int import _to_double
 from stats.stats_helpers.clean_int import _to_int
-from stats.parse_player_hitting import _parse_dt
+from stats.baseball.parse_player_hitting import _parse_dt
 
 
 

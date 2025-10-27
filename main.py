@@ -1,8 +1,9 @@
 # main.py (sketch)
 from roster.get_roster_baseball import get_roster_baseball
-from roster.upsert_roster_baseball import upsert_roster_baseball
+from roster.upsert_roster import upsert_roster
 from helpers.core import get_db_connection
 from schedule.schedule_helpers.ensure_team_season import ensure_team_season
+from roster.get_roster_football import get_roster_from_api
 from requests import Session 
 from stats.baseball.parse_player_hitting import get_player_hitting_mu
 from stats.baseball.upsert_player_hitting import upsert_player_batting_gamelog, upsert_player_hitting_season_highs
@@ -12,8 +13,12 @@ from stats.baseball.parse_player_fielding import get_player_fielding_mu
 from stats.baseball.upsert_player_fielding import upsert_player_fielding_gamelog, upsert_player_fielding_season_highs
 from helpers.core import BASE
 
+
+
+
+
+
 conn = get_db_connection()
-tsid = ensure_team_season(conn, school="Missouri", sport_key="baseball", sport_name="Baseball", year=2025, sport_slug="baseball")
 
 
 YEARS = {
@@ -31,12 +36,29 @@ for year in YEARS:
         upsert_roster_baseball(conn, tsid, [person]) 
 '''
 
+# GET FOOTBALL ROSTER BY SEASON
+
+
+for year in YEARS:
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
+    for person in get_roster_from_api('football', year):
+        upsert_roster(conn, tsid, [person])
+
+
+
+
+
+
 # GET BASEBALL SCHEDULE BY SEASON
 '''
 for game in get_schedule_baseball('baseball', 2025, debug=False):
     upsert_schedule_baseball(conn, tsid, [game])
 
 '''
+
+
+
+
 
 
 
@@ -105,6 +127,7 @@ for (player_id, roster_player_id) in pitchers:
 
 
 # GET BASEBALL PLAYER FIELDING STATS BY PLAYER LINK
+'''
 sess = Session()
 year = 2025
 
@@ -128,3 +151,4 @@ for (player_id, roster_player_id) in players:
 
     upsert_player_fielding_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
     upsert_player_fielding_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
+'''
