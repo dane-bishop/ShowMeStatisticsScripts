@@ -38,11 +38,16 @@ for year in YEARS:
 
 # GET FOOTBALL ROSTER BY SEASON
 
-
+'''
 for year in YEARS:
     tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
     for person in get_roster_from_api('football', year):
         upsert_roster(conn, tsid, [person])
+'''
+
+
+
+
 
 
 
@@ -55,6 +60,8 @@ for game in get_schedule_baseball('baseball', 2025, debug=False):
     upsert_schedule_baseball(conn, tsid, [game])
 
 '''
+
+
 
 
 
@@ -94,9 +101,6 @@ for (player_id, roster_player_id) in batters:
     upsert_player_hitting_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
 '''
 
-
-
-
 # GET BASEBALL PLAYER PITCHING STATS BY PLAYER LINK
 '''
 sess = Session()
@@ -124,7 +128,6 @@ for (player_id, roster_player_id) in pitchers:
     upsert_player_pitching_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
 
 '''
-
 
 # GET BASEBALL PLAYER FIELDING STATS BY PLAYER LINK
 '''
