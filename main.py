@@ -8,6 +8,8 @@ from stats.parse_player_hitting import get_player_hitting_mu
 from stats.upsert_player_hitting import upsert_player_batting_gamelog, upsert_player_hitting_season_highs
 from stats.parse_player_pitching import get_player_pitching_mu
 from stats.upsert_player_pitching import upsert_player_pitching_gamelog, upsert_player_pitching_season_highs
+from stats.parse_player_fielding import get_player_fielding_mu
+from stats.upsert_player_fielding import upsert_player_fielding_gamelog, upsert_player_fielding_season_highs
 from helpers.core import BASE
 
 conn = get_db_connection()
@@ -57,11 +59,7 @@ with conn.cursor() as cur:
     """)
     batters = cur.fetchall()
 
-
-
 print(f"Adding data for {len(batters)} batters")
-
-
 
 for (player_id, roster_player_id) in batters:
     print(f"Player ID: {player_id} - Roster Player ID: {roster_player_id}")
@@ -75,7 +73,10 @@ for (player_id, roster_player_id) in batters:
 '''
 
 
+
+
 # GET BASEBALL PLAYER PITCHING STATS BY PLAYER LINK
+'''
 sess = Session()
 year = 2025
 
@@ -99,3 +100,31 @@ for (player_id, roster_player_id) in pitchers:
 
     upsert_player_pitching_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
     upsert_player_pitching_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
+
+'''
+
+
+# GET BASEBALL PLAYER FIELDING STATS BY PLAYER LINK
+sess = Session()
+year = 2025
+
+with conn.cursor() as cur:
+    cur.execute("""
+    SELECT DISTINCT p.id, p.player_id
+    FROM players p
+    JOIN roster_memberships rm
+    ON rm.player_id = p.id
+    WHERE rm.position IS NOT NULL
+    """)
+    players = cur.fetchall()
+
+print(f"Adding data for {len(players)} players")
+
+for (player_id, roster_player_id) in players:
+    print(f"Player ID: {player_id} - Roster Player ID: {roster_player_id}")
+
+    parsed = get_player_fielding_mu(sess, roster_player_id, year)
+    print("first 2 rows: ", parsed["gamelog"][:2])
+
+    upsert_player_fielding_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
+    upsert_player_fielding_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])

@@ -96,3 +96,40 @@ gera DOUBLE PRECISION, sera DOUBLE PRECISION,
 UNIQUE(player_id, game_id)
 )
 """
+
+
+# Create fielding table
+"""
+CREATE TABLE player_game_fielding (
+    id BIGSERIAL PRIMARY KEY, 
+    player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
+    source_game_id INTEGER,
+    wl TEXT,
+    c INT,
+    po INT,
+    a INT,
+    e INT,
+    fld DOUBLE PRECISION,
+    dp INT, sba INT, csb INT, pb INT, ci INT,
+    UNIQUE(player_id, game_id)
+    );
+    
+
+    
+    
+    )"""
+
+"""
+wl - result
+c - totalChances
+po - putouts
+a - assists
+e - errors
+fld - fieldingPercentage
+dp - involvedInDoublePlayers
+sba - stolenBasesAgainst
+csb - caughtStealingBy
+pb - passedBalls
+ci - catchersInterference
+"""
