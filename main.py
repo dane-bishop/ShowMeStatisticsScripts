@@ -4,12 +4,12 @@ from roster.upsert_roster_baseball import upsert_roster_baseball
 from helpers.core import get_db_connection
 from schedule.schedule_helpers.ensure_team_season import ensure_team_season
 from requests import Session 
-from stats.parse_player_hitting import get_player_hitting_mu
-from stats.upsert_player_hitting import upsert_player_batting_gamelog, upsert_player_hitting_season_highs
-from stats.parse_player_pitching import get_player_pitching_mu
-from stats.upsert_player_pitching import upsert_player_pitching_gamelog, upsert_player_pitching_season_highs
-from stats.parse_player_fielding import get_player_fielding_mu
-from stats.upsert_player_fielding import upsert_player_fielding_gamelog, upsert_player_fielding_season_highs
+from stats.baseball.parse_player_hitting import get_player_hitting_mu
+from stats.baseball.upsert_player_hitting import upsert_player_batting_gamelog, upsert_player_hitting_season_highs
+from stats.baseball.parse_player_pitching import get_player_pitching_mu
+from stats.baseball.upsert_player_pitching import upsert_player_pitching_gamelog, upsert_player_pitching_season_highs
+from stats.baseball.parse_player_fielding import get_player_fielding_mu
+from stats.baseball.upsert_player_fielding import upsert_player_fielding_gamelog, upsert_player_fielding_season_highs
 from helpers.core import BASE
 
 conn = get_db_connection()

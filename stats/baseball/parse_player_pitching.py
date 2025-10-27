@@ -120,16 +120,124 @@ CREATE TABLE player_game_fielding (
     
     )"""
 
+
 """
-wl - result
-c - totalChances
-po - putouts
-a - assists
-e - errors
-fld - fieldingPercentage
-dp - involvedInDoublePlayers
-sba - stolenBasesAgainst
-csb - caughtStealingBy
-pb - passedBalls
-ci - catchersInterference
+CREATE TABLE player_game_football_offense (
+    id BIGSERIAL PRIMARY KEY,
+    player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
+    source_game_id INTEGER,
+
+    pass_comp INTEGER,
+    pass_att INTEGER,
+    pass_int INTEGER,
+    pass_pct NUMERIC(5,2),
+    pass_yds INTEGER,
+    pass_tds INTEGER,
+    pass_lng INTEGER,
+
+    rush_att INTEGER,
+    rush_yds INTEGER,
+    rush_tds INTEGER,
+    rush_lng INTEGER,
+
+    rec INTEGER,
+    rec_yds INTEGER,
+    rec_tds INTEGER,
+    rec_lng INTEGER,
+
+    kr_ret INTEGER,
+    kr_yds INTEGER,
+    kr_tds INTEGER,
+    kr_lng INTEGER,
+
+    pr_ret INTEGER,
+    pr_yds INTEGER,
+    pr_tds INTEGER,
+    pr_lng INTEGER,
+    UNIQUE(player_id, game_id)
+    );
+"""
+
+
+
+"""
+passingCompletions
+passingAttempts
+passingInterceptions
+passingYards
+passingTouchdowns
+passingLongest
+
+rushingNumber
+rushingYards
+rushingTouchdowns
+rushingLongest
+
+recNumber
+recYards
+recTouchdowns
+recLongest
+
+#TRY
+kickRetNumber
+kickRetYards
+kickRetTouchdowns
+kickRetLongest
+
+puntRetNumber
+puntRetYards
+puntRetTouchdowns
+puntRetLongest
+"""
+
+"""
+CREATE TABLE player_game_football_defense (
+    id BIGSERIAL PRIMARY KEY,
+    player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    game_id INTEGER REFERENCES games(id) ON DELETE CASCADE,
+    source_game_id INTEGER,
+
+    solo INTEGER,
+    ast INTEGER,
+    ttot INTEGER,
+    tfl DOUBLE PRECISION,
+    tyds INTEGER,
+
+    stot DOUBLE PRECISION,
+    syds INTEGER,
+
+    ff INTEGER,
+    fr INTEGER,
+    fyds INTEGER,
+
+    ints INTEGER,
+    int_yds INTEGER,
+
+    qbh INTEGER,
+    brk INTEGER,
+
+    kick INTEGER,
+    saf INTEGER,
+    UNIQUE(player_id, game_id)
+);
+"""
+
+"""
+tacklesSolo
+tacklesAssist
+tacklesTotal
+tacklesForLoss
+tacklesYards
+sacksNumber
+sacksYards
+fumblesForces
+fumblesRecoveries
+fumblesYards
+intsNumber
+intsYards
+quarterbackHurries
+passBreakups
+blockedKick
+safeties
 """
