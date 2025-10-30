@@ -11,6 +11,7 @@ from stats.baseball.parse_player_pitching import get_player_pitching_mu
 from stats.baseball.upsert_player_pitching import upsert_player_pitching_gamelog, upsert_player_pitching_season_highs
 from stats.baseball.parse_player_fielding import get_player_fielding_mu
 from stats.baseball.upsert_player_fielding import upsert_player_fielding_gamelog, upsert_player_fielding_season_highs
+from schedule.get_schedule_from_api import upsert_games_from_schedule
 from helpers.core import BASE
 
 
@@ -20,11 +21,83 @@ from helpers.core import BASE
 
 conn = get_db_connection()
 
+# Basketball/Golf Years
+
+'''
+YEARS = {
+    "2024-25",
+    "2023-24",
+    "2022-23",
+    "2021-22",
+    "2020-21",
+    "2019-20",
+    "2018-19",
+    "2017-18",
+    "2016-17",
+    "2015-16",
+    "2014-15",
+    "2013-14",
+    "2012-13",
+    "2011-12",
+    "2010-11",
+    "2009-10",
+    "2008-09",
+    "2007-08",
+    "2006-07",
+    "2005-06",
+    "2004-05",
+    "2003-04",
+    "2002-03",
+    "2001-02",
+    "2000-01"
+}
+'''
+
 
 YEARS = {
-    2025
+    "2025",
+    "2024",
+    "2023",
+    "2022",
+    "2021",
+    "2020",
+    "2019",
+    "2018",
+    "2017",
+    "2016",
+    "2015",
+    "2014",
+    "2013",
+    "2012",
+    "2011",
+    "2010",
+    "2009",
+    "2008",
+    "2007",
+    "2006",
+    "2005",
+    "2004",
+    "2003",
+    "2002",
+    "2001",
+    "2000"
 }
 
+
+def season_to_year(season_str: str, use="start") -> int:
+    """
+    Convert 'YYYY-YY' -> an integer year for DB.
+    use='start' -> 2024
+    use='end'   -> 2025 (assumes two-digit end and 2000s)
+    """
+    left, right = season_str.split("-")
+    start = int(left)
+    if use == "end":
+        # handle '25' -> 2025; adjust if your data ever spans centuries
+        end = int(right)
+        end += 2000 if end < 100 else 0
+        return end
+    return start
 
 
 
@@ -33,17 +106,117 @@ YEARS = {
 for year in YEARS:
     tsid = ensure_team_season(conn, school="Missouri", sport_key="baseball", sport_name="Baseball", year=year, sport_slug="baseball")
     for person in get_roster_baseball('baseball', year):
-        upsert_roster_baseball(conn, tsid, [person]) 
+        upsert_roster(conn, tsid, [person]) 
 '''
 
 # GET FOOTBALL ROSTER BY SEASON
 
 '''
 for year in YEARS:
+
     tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
     for person in get_roster_from_api('football', year):
         upsert_roster(conn, tsid, [person])
 '''
+
+# GET BASKETBALL ROSTER BY SEASON
+'''
+for season in YEARS:
+
+    api_season = season            
+    db_year    = season_to_year(season, use="start")
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="mens-basketball", sport_name="Men's Basketball", year=db_year, sport_slug="mens-basketball")
+    for person in get_roster_from_api('mens-basketball', api_season):
+        upsert_roster(conn, tsid, [person])
+'''
+
+# GET BASKETBALL ROSTER BY SEASON (Womens)
+'''
+for season in YEARS:
+
+    api_season = season            
+    db_year    = season_to_year(season, use="start")
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-basketball", sport_name="Women's Basketball", year=db_year, sport_slug="womens-basketball")
+    for person in get_roster_from_api('womens-basketball', api_season):
+        upsert_roster(conn, tsid, [person])
+'''
+
+# GET GOLF ROSTER BY SEASON
+
+'''
+for season in YEARS:
+
+    api_season = season            
+    db_year    = season_to_year(season, use="start")
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="mens-golf", sport_name="Men's Golf", year=db_year, sport_slug="mens-golf")
+    for person in get_roster_from_api('mens-golf', api_season):
+        upsert_roster(conn, tsid, [person])
+'''
+
+# GET GOLF ROSTER BY SEASON (WOMENS)
+        
+'''
+for season in YEARS:
+
+    api_season = season            
+    db_year    = season_to_year(season, use="start")
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-golf", sport_name="Women's Golf", year=db_year, sport_slug="womens-golf")
+    for person in get_roster_from_api('womens-golf', api_season):
+        upsert_roster(conn, tsid, [person])
+'''
+        
+
+# GET WOMENS SOCCER ROSTER
+'''
+for year in YEARS:
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-soccer", sport_name="Women's Soccer", year=year, sport_slug="womens-soccer")
+    for person in get_roster_from_api('womens-soccer', year):
+        upsert_roster(conn, tsid, [person])
+'''
+
+# GET SOFTBALL ROSTER
+'''
+for year in YEARS:
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="softball", sport_name="Softball", year=year, sport_slug="softball")
+    for person in get_roster_from_api('softball', year):
+        upsert_roster(conn, tsid, [person])
+'''
+
+
+# GET VOLLEYBALL ROSTER
+'''
+for year in YEARS:
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-volleyball", sport_name="Women's Volleyball", year=year, sport_slug="womens-volleyball")
+    for person in get_roster_from_api('womens-volleyball', year):
+        upsert_roster(conn, tsid, [person])
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -62,10 +235,37 @@ for game in get_schedule_baseball('baseball', 2025, debug=False):
 '''
 
 
-
-
-
-
+# GET SCHEDULE BY API ID's
+FOOTBALL_SEASONS = {
+    4940: 2024,
+    4774: 2023,
+    4707: 2022,
+    4688: 2021,
+    3499: 2020,
+    2480: 2019,
+    459:  2018,
+    439:  2017,
+    420:  2016,
+    195:  2015,
+    194:  2014,
+    193:  2013,
+    192:  2012,
+    191:  2011,
+    190:  2010,
+    189:  2009,
+    188:  2008,
+    187:  2007,
+    186:  2006,
+    185:  2005,
+    184:  2004,
+    183:  2003,
+    182:  2002,
+    181:  2001,
+    180:  2000,
+}
+for season_id, year in FOOTBALL_SEASONS.items():
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
+    upsert_games_from_schedule(conn, tsid, season_id)
 
 
 
