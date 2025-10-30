@@ -12,6 +12,7 @@ from stats.baseball.upsert_player_pitching import upsert_player_pitching_gamelog
 from stats.baseball.parse_player_fielding import get_player_fielding_mu
 from stats.baseball.upsert_player_fielding import upsert_player_fielding_gamelog, upsert_player_fielding_season_highs
 from schedule.get_schedule_from_api import upsert_games_from_schedule
+from helpers.season_ids import FOOTBALL_SEASONS, MENS_BASKETBALL_SEASONS, WOMENS_BASKETBALL_SEASONS, SOFTBALL_SEASONS, VOLLEYBALL_SEASONS
 from helpers.core import BASE
 
 
@@ -101,7 +102,16 @@ def season_to_year(season_str: str, use="start") -> int:
 
 
 
-# GET BASEBALL ROSTER BY SEASON
+
+
+
+# -------------------------------
+# ROSTERS
+# -------------------------------
+
+
+
+# GET BASEBALL ROSTER BY SEASON 
 '''
 for year in YEARS:
     tsid = ensure_team_season(conn, school="Missouri", sport_key="baseball", sport_name="Baseball", year=year, sport_slug="baseball")
@@ -109,8 +119,7 @@ for year in YEARS:
         upsert_roster(conn, tsid, [person]) 
 '''
 
-# GET FOOTBALL ROSTER BY SEASON
-
+# GET FOOTBALL ROSTER BY SEASON 
 '''
 for year in YEARS:
 
@@ -142,7 +151,6 @@ for season in YEARS:
 '''
 
 # GET GOLF ROSTER BY SEASON
-
 '''
 for season in YEARS:
 
@@ -153,8 +161,7 @@ for season in YEARS:
         upsert_roster(conn, tsid, [person])
 '''
 
-# GET GOLF ROSTER BY SEASON (WOMENS)
-        
+# GET GOLF ROSTER BY SEASON (WOMENS)    
 '''
 for season in YEARS:
 
@@ -221,7 +228,9 @@ for year in YEARS:
 
 
 
-
+# -------------------------------
+# SCHEDULES
+# -------------------------------
 
 
 
@@ -234,43 +243,58 @@ for game in get_schedule_baseball('baseball', 2025, debug=False):
 
 '''
 
+# GET FOOTBALL SCHEDULE BY API ID's - DONE
+'''
 
-# GET SCHEDULE BY API ID's
-FOOTBALL_SEASONS = {
-    4940: 2024,
-    4774: 2023,
-    4707: 2022,
-    4688: 2021,
-    3499: 2020,
-    2480: 2019,
-    459:  2018,
-    439:  2017,
-    420:  2016,
-    195:  2015,
-    194:  2014,
-    193:  2013,
-    192:  2012,
-    191:  2011,
-    190:  2010,
-    189:  2009,
-    188:  2008,
-    187:  2007,
-    186:  2006,
-    185:  2005,
-    184:  2004,
-    183:  2003,
-    182:  2002,
-    181:  2001,
-    180:  2000,
-}
 for season_id, year in FOOTBALL_SEASONS.items():
     tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
     upsert_games_from_schedule(conn, tsid, season_id)
+'''
 
+# GET MENS BASKETBALL SCHEDULE BY ID's - DONE
+'''
+
+for season_id, year in MENS_BASKETBALL_SEASONS.items():
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="mens-basketball", sport_name="Men's Basketball", year=year, sport_slug="mens-basketball")
+    upsert_games_from_schedule(conn, tsid, season_id)
+'''
+
+# GET WOMENS BASKETBALL SCHEDULE BY ID's - DONE
+'''
+
+for season_id, year in WOMENS_BASKETBALL_SEASONS.items():
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-basketball", sport_name="Women's Basketball", year=year, sport_slug="womens-basketball")
+    upsert_games_from_schedule(conn, tsid, season_id)
+'''
+
+# GET SOFTBALL SCHEDULE BY ID's - DONE
+'''
+
+for season_id, year in SOFTBALL_SEASONS.items():
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="softball", sport_name="Softball", year=year, sport_slug="softball")
+    upsert_games_from_schedule(conn, tsid, season_id)
+'''
+
+# GET VOLLEYBALL SCHEDULE BY ID's - DONE
+'''
+for season_id, year in VOLLEYBALL_SEASONS.items():
+    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-volleyball", sport_name="Women's Volleyball", year=year, sport_slug="womens-volleyball")
+    upsert_games_from_schedule(conn, tsid, season_id)
+'''
+
+
+
+
+
+
+
+
+# -------------------------------
+# STATS
+# -------------------------------
 
 
 # GET BASEBALL PLAYER HITTING STATS BY PLAYER LINK
-
 '''
 sess = Session()
 #player_id = 4  
