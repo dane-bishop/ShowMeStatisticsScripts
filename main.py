@@ -355,6 +355,7 @@ for (player_id, roster_player_id) in pitchers:
 
 # GET BASEBALL PLAYER FIELDING STATS BY PLAYER LINK
 '''
+
 sess = Session()
 year = 2025
 
@@ -379,3 +380,22 @@ for (player_id, roster_player_id) in players:
     upsert_player_fielding_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
     upsert_player_fielding_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
 '''
+
+
+
+
+# GET FOOTBALL PLAYER OFFENSE STATS
+
+# GET FOOTBALL PLAYER DEFENSE STATS
+
+# GET FOOTBALL PLAYER SPECIAL TEAMS STATS
+
+
+
+# GET BASKETBALL PLAYER STATS (Men's and Women's)
+
+
+
+
+
+

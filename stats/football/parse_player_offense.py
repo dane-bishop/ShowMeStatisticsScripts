@@ -12,7 +12,7 @@ from stats.baseball.parse_player_hitting import _parse_dt
 
 def parse_player_football_offense_from_mu(payload: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
     # ---- Game log ----
-    gsrc = payload.get("currentStats", {}).get("fieldingStats", []) or []
+    gsrc = payload.get("currentStats", {}).get("offensiveStats", []) or []
     gamelog: List[Dict[str, Any]] = []
 
     for g in gsrc:
