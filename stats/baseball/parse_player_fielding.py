@@ -62,6 +62,10 @@ def parse_player_fielding_from_mu(payload: Dict[str, Any]) -> Dict[str, List[Dic
 
     return {"gamelog": gamelog, "season_highs": season_highs}
 
+
+
+
+
 def get_player_fielding_mu(sess, roster_player_id: int, year: int) -> Dict[str, List[Dict[str, Any]]]:
     data = fetch_mu_player_json(sess, roster_player_id, year)
     parsed = parse_player_fielding_from_mu(data)

@@ -18,7 +18,7 @@ def upsert_player_football_defense_gamelog(conn, player_id: int, rows: Iterable[
             sgid = g.get("source_game_id")
             game_id = _find_game_id_by_source(cur, sgid) if sgid else None
     
-            if not g.get("game_source_id") and not g.get("game_date"):
+            if not sgid and not g.get("game_date"):
                 skipped += 1
                 continue
 

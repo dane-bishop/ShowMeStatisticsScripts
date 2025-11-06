@@ -1,4 +1,4 @@
-# stats/parse_player_hitting_mu.py
+
 from __future__ import annotations
 from typing import Any, Dict, List, Iterable, Optional
 from datetime import datetime
@@ -33,40 +33,43 @@ def parse_player_football_offense_from_mu(payload: Dict[str, Any]) -> Dict[str, 
 
             # Passing
             "pass_comp": _to_int(passing.get("passingCompletions")),
+           
             "pass_att":  _to_int(passing.get("passingAttempts")),
             "pass_int":  _to_int(passing.get("passingInterceptions")),
             "pass_pct":  _to_double(passing.get("passingPercentage")),  # store 82.1 (no % sign)
             "pass_yds":  _to_int(passing.get("passingYards")),
-            "pass_td":   _to_int(passing.get("passingTouchdowns")),
-            "pass_long": _to_int(passing.get("passingLongest")),
+            "pass_tds":   _to_int(passing.get("passingTouchdowns")),
+            "pass_lng": _to_int(passing.get("passingLongest")),
 
             # Rushing
             "rush_att":  _to_int(rushing.get("rushingNumber")),
             "rush_yds":  _to_int(rushing.get("rushingYards")),
-            "rush_td":   _to_int(rushing.get("rushingTouchdowns")),
-            "rush_long": _to_int(rushing.get("rushingLongest")),
+            "rush_tds":   _to_int(rushing.get("rushingTouchdowns")),
+            "rush_lng": _to_int(rushing.get("rushingLongest")),
 
             # Receiving
-            "rec_rec":   _to_int(receiving.get("recNumber")),
+            "rec":   _to_int(receiving.get("recNumber")),
             "rec_yds":   _to_int(receiving.get("recYards")),
-            "rec_td":    _to_int(receiving.get("recTouchdowns")),
-            "rec_long":  _to_int(receiving.get("recLongest")),
+            "rec_tds":    _to_int(receiving.get("recTouchdowns")),
+            "rec_lng":  _to_int(receiving.get("recLongest")),
 
             # Kick Returns
             "kr_ret":    _to_int(kr.get("kickRetNumber") or kr.get("krNumber") or kr.get("retNumber")),
             "kr_yds":    _to_int(kr.get("kickRetYards")  or kr.get("krYards")),
-            "kr_td":     _to_int(kr.get("kickRetTouchdowns") or kr.get("krTouchdowns")),
-            "kr_long":   _to_int(kr.get("kickRetLongest") or kr.get("krLongest")),
+            "kr_tds":     _to_int(kr.get("kickRetTouchdowns") or kr.get("krTouchdowns")),
+            "kr_lng":   _to_int(kr.get("kickRetLongest") or kr.get("krLongest")),
 
             # Punt Returns
             "pr_ret":    _to_int(pr.get("puntRetNumber")),
             "pr_yds":    _to_int(pr.get("puntRetYards")),
-            "pr_td":     _to_int(pr.get("puntRetTouchdowns")),
-            "pr_long":   _to_int(pr.get("puntRetLongest")),
+            "pr_tds":     _to_int(pr.get("puntRetTouchdowns")),
+            "pr_lng":   _to_int(pr.get("puntRetLongest")),
             
         }
         gamelog.append(row)
 
+   
+      
     # ---- Season highs ----
     hsrc = payload.get("seasonHighStats", {}).get("offensive", []) or []
     season_highs: List[Dict[str, Any]] = []
