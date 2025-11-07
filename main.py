@@ -18,7 +18,8 @@ from schedule.baseball.get_schedule_baseball import get_schedule_baseball
 from schedule.baseball.upsert_schedule_baseball import upsert_schedule_baseball
 from stats.football.parse_player_offense import get_player_football_offense_mu
 from stats.football.upsert_player_offense import upsert_player_football_offense_gamelog, upsert_player_football_offense_season_highs
-
+from stats.football.parse_player_defense import get_player_football_defense_mu
+from stats.football.upsert_player_defense import upsert_player_football_defense_gamelog, upsert_player_football_defense_season_highs
 
 
 
@@ -124,13 +125,13 @@ for year in YEARS:
 '''
 
 # GET FOOTBALL ROSTER BY SEASON 
-
+'''
 for year in YEARS:
 
     tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
     for person in get_roster_from_api('football', year):
         upsert_roster(conn, tsid, [person])
-
+'''
 
 # GET BASKETBALL ROSTER BY SEASON
 '''
@@ -392,36 +393,30 @@ for (player_id, roster_player_id) in players:
 # GET FOOTBALL PLAYER OFFENSE STATS
 '''
 sess = Session()
-year = 2024
-player_id = 2785
-roster_player_id = 522
 
-print(f"Player ID: {player_id} - Roster Player ID: {roster_player_id}")
+# year = 2024
+# player_id = 2785
+# roster_player_id = 522
 
-parsed = get_player_football_offense_mu(sess, roster_player_id, year)
-print("first 2 rows:", parsed["gamelog"][:2])
-
-
-upsert_player_football_offense_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
-upsert_player_football_offense_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
 
 
 for season_id, year in FOOTBALL_SEASONS.items():
 
     with conn.cursor() as cur:
         cur.execute("""
-        SELECT DISTINCT ON (p.id)
+        SELECT 
             p.id,
-            p.player_id
+            rm.roster_player_id
         FROM players p
         JOIN roster_memberships rm ON rm.player_id = p.id
         JOIN team_seasons ts       ON ts.id = rm.team_season_id
         JOIN teams t               ON t.id = ts.team_id
         JOIN sports s              ON s.id = t.sport_id
         CROSS JOIN LATERAL regexp_split_to_array(upper(rm.position), '[^A-Z]+') AS pos_tokens
-        WHERE s.name = 'Football' AND
-        WHERE ts.year = %s
+        WHERE s.name = 'Football' 
+        AND ts.year = %s
         AND rm.position IS NOT NULL
+        AND rm.roster_player_id IS NOT NULL
 
         -- OFFENSE: include if any of these are present
         AND (
@@ -449,7 +444,7 @@ for season_id, year in FOOTBALL_SEASONS.items():
         ORDER BY p.id, ts.year DESC
 
 
-        """)
+        """, (year,))
         players = cur.fetchall()
 
     print(f"Adding data for {len(players)} offensive players")
@@ -463,10 +458,79 @@ for season_id, year in FOOTBALL_SEASONS.items():
 
         upsert_player_football_offense_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
         upsert_player_football_offense_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
+
 '''
 
-
 # GET FOOTBALL PLAYER DEFENSE STATS
+sess = Session()
+
+# year = 2024
+# player_id = 2785
+# roster_player_id = 522
+
+
+
+for season_id, year in FOOTBALL_SEASONS.items():
+
+    with conn.cursor() as cur:
+        cur.execute("""
+        SELECT
+        p.id,
+        rm.roster_player_id
+        FROM players p
+        JOIN roster_memberships rm ON rm.player_id = p.id
+        JOIN team_seasons ts       ON ts.id = rm.team_season_id
+        JOIN teams t               ON t.id = ts.team_id
+        JOIN sports s              ON s.id = t.sport_id
+        CROSS JOIN LATERAL (
+        SELECT regexp_split_to_array(upper(rm.position), '[^A-Z]+') AS pos_tokens
+        ) pt
+        WHERE s.name = 'Football'
+        AND ts.year = %s
+        AND rm.position IS NOT NULL
+        AND rm.roster_player_id IS NOT NULL
+
+        -- DEFENSE: include if any defensive indicators are present
+        AND (
+            -- single-token roles
+            pt.pos_tokens && ARRAY[
+                'DB','CB','S','SS','FS',
+                'DL','DE','DT','NT',
+                'LB','ILB','MLB','OLB',
+                'EDGE','DEFENSE','DEFENSIVE',
+                'CORNERBACK','SAFETY','LINEBACKER',
+                'LINEMAN','LINEMEN','DEFENSIVEBACK','DEFENSIVELINE'
+            ]
+            -- multi-word / composed roles
+            OR ('CORNER'    = ANY(pt.pos_tokens) AND 'BACK'   = ANY(pt.pos_tokens)) -- cornerback
+            OR ('LINE'      = ANY(pt.pos_tokens) AND ('BACKER' = ANY(pt.pos_tokens) OR 'BACKERS' = ANY(pt.pos_tokens))) -- linebacker
+            OR ('DEFENSIVE' = ANY(pt.pos_tokens) AND ('END' = ANY(pt.pos_tokens) OR 'TACKLE' = ANY(pt.pos_tokens) OR 'LINE' = ANY(pt.pos_tokens) OR 'BACK' = ANY(pt.pos_tokens)))
+        )
+
+        -- Optional: EXCLUDE obvious special-teams roles even if mixed (WR/DB won’t be excluded)
+        AND NOT (
+            pt.pos_tokens && ARRAY['K','P','PK','PUNTER','KICKER','PLACEKICKER','LS']
+            OR ('LONG' = ANY(pt.pos_tokens) AND 'SNAPPER' = ANY(pt.pos_tokens))
+        )
+        ORDER BY p.id, ts.year DESC
+
+
+        """, (year,))
+        players = cur.fetchall()
+
+    print(f"Adding data for {len(players)} defensive players")
+
+    for (player_id, roster_player_id) in players:
+        print(f"Player ID: {player_id} - Roster Player ID: {roster_player_id}")
+
+        parsed = get_player_football_defense_mu(sess, roster_player_id, year)
+        print("first 2 rows:", parsed["gamelog"][:2])
+
+
+        upsert_player_football_defense_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
+        upsert_player_football_defense_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
+
+
 
 # GET FOOTBALL PLAYER SPECIAL TEAMS STATS
 

@@ -23,7 +23,7 @@ def upsert_player_football_defense_gamelog(conn, player_id: int, rows: Iterable[
                 continue
 
             cur.execute("""
-                INSERT INTO player_game_football_offense (
+                INSERT INTO player_game_football_defense (
                     player_id, game_id, source_game_id,
                     solo, ast, ttot, tfl, tyds,
                     stot, syds,
@@ -59,14 +59,14 @@ def upsert_player_football_defense_gamelog(conn, player_id: int, rows: Iterable[
                     qbh = COALESCE(EXCLUDED.qbh, player_game_football_defense.qbh),
                     brk = COALESCE(EXCLUDED.brk, player_game_football_defense.brk),
                     kick = COALESCE(EXCLUDED.kick, player_game_football_defense.kick),
-                    saf = COALESCE(EXCLUDED.saf, player_game_football_defense.saf),
+                    saf = COALESCE(EXCLUDED.saf, player_game_football_defense.saf)
             """, (
                 player_id, game_id, sgid,
                 g.get("solo"), g.get("ast"), g.get("ttot"), g.get("tfl"),
                 g.get("tyds"), g.get("stot"), g.get("syds"),
                 g.get("ff"), g.get("fr"), g.get("fyds"), g.get("ints"),
                 g.get("int_yds"), g.get("qbh"), g.get("brk"), g.get("kick"),
-                g.get("saf"), 
+                g.get("saf"),
             ))
 
             print(f"Attributes: Tackles {g.get("ttot")}, Interceptions: {g.get("ints")}")

@@ -74,7 +74,8 @@ def parse_player_football_defense_from_mu(payload: Dict[str, Any]) -> Dict[str, 
     return {"gamelog": gamelog, "season_highs": season_highs}
 
 def get_player_football_defense_mu(sess, roster_player_id: int, year: int) -> Dict[str, List[Dict[str, Any]]]:
-    data = fetch_mu_player_json(sess, roster_player_id, year)
+    sport = 'football'
+    data = fetch_mu_player_json(sess, roster_player_id, year, sport)
     parsed = parse_player_football_defense_from_mu(data)
     print(f"[mu-json] gamelog={len(parsed['gamelog'])} highs={len(parsed['season_highs'])}")
     return parsed

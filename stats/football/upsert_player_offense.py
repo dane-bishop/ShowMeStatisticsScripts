@@ -31,7 +31,7 @@ def upsert_player_football_offense_gamelog(conn, player_id: int, rows: Iterable[
                     kr_ret, kr_yds, kr_tds, kr_lng,
                     pr_ret, pr_yds, pr_tds, pr_lng
                 ) VALUES (
-                    %s,%s,%s,%s,%s,
+                    %s,%s,%s,
                     %s,%s,%s,%s,%s,%s,%s,
                     %s,%s,%s,%s,
                     %s,%s,%s,%s,
@@ -55,7 +55,7 @@ def upsert_player_football_offense_gamelog(conn, player_id: int, rows: Iterable[
                     rush_tds   = COALESCE(EXCLUDED.rush_tds,   player_game_football_offense.rush_tds),
                     rush_lng = COALESCE(EXCLUDED.rush_lng, player_game_football_offense.rush_lng),
 
-                    rec_rec   = COALESCE(EXCLUDED.rec_rec,   player_game_football_offense.rec_rec),
+                    rec   = COALESCE(EXCLUDED.rec,   player_game_football_offense.rec),
                     rec_yds   = COALESCE(EXCLUDED.rec_yds,   player_game_football_offense.rec_yds),
                     rec_tds    = COALESCE(EXCLUDED.rec_tds,    player_game_football_offense.rec_tds),
                     rec_lng  = COALESCE(EXCLUDED.rec_lng,  player_game_football_offense.rec_lng),
@@ -74,12 +74,12 @@ def upsert_player_football_offense_gamelog(conn, player_id: int, rows: Iterable[
                 g.get("pass_comp"), g.get("pass_att"), g.get("pass_int"), g.get("pass_pct"),
                 g.get("pass_yds"), g.get("pass_tds"), g.get("pass_lng"),
                 g.get("rush_att"), g.get("rush_yds"), g.get("rush_tds"), g.get("rush_lng"),
-                g.get("rec_rec"), g.get("rec_yds"), g.get("rec_tds"), g.get("rec_lng"),
+                g.get("rec"), g.get("rec_yds"), g.get("rec_tds"), g.get("rec_lng"),
                 g.get("kr_ret"), g.get("kr_yds"), g.get("kr_tds"), g.get("kr_lng"),
                 g.get("pr_ret"), g.get("pr_yds"), g.get("pr_tds"), g.get("pr_lng"),
             ))
 
-            print(f"Attributes: Pass Att. {g.get("pass_att")}, Rush Yds: {g.get("rush_yds")}")
+            print(f'Attributes: Pass Att. {g.get("pass_att")}, Rush Yds: {g.get("rush_yds")}')
             if cur.rowcount == 1:
                 inserted += 1
             else:
