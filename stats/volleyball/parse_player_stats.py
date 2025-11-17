@@ -38,7 +38,7 @@ def parse_player_volleyball_stats(payload: Dict[str, Any]) -> Dict[str, List[Dic
             "e": _to_int(g.get("setErrors")),
             "sa": _to_int(g.get("serveAces")),
             "se": _to_int(g.get("serveErrors")),
-            "dre": _to_int(g.get("defensiveReceptionErrors")),
+            "dre": _to_int(g.get("defenseReceptionErrors")),
             "dd": _to_int(g.get("defenseDigs")),
             "solo": _to_int(g.get("blockSolos")),
             "blk_ast": _to_int(g.get("blockAssists")),

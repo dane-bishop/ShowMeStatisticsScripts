@@ -286,27 +286,29 @@ for season_id, year in BASEBALL_SEASONS.items():
 
 # GET FOOTBALL SCHEDULE BY API ID's - DONE
 
-'''
-for season_id, year in FOOTBALL_SEASONS.items():
-    tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=year, sport_slug="football")
-    upsert_games_from_schedule(conn, tsid, season_id)
-'''
+
+#for season_id, year in FOOTBALL_SEASONS.items():
+
+
+tsid = ensure_team_season(conn, school="Missouri", sport_key="football", sport_name="Football", year=2025, sport_slug="football")
+upsert_games_from_schedule(conn, tsid, 5121)
+
 
 # GET MENS BASKETBALL SCHEDULE BY ID's - DONE
 
-'''
-for season_id, year in MENS_BASKETBALL_SEASONS.items():
-    tsid = ensure_team_season(conn, school="Missouri", sport_key="mens-basketball", sport_name="Men's Basketball", year=year, sport_slug="mens-basketball")
-    upsert_games_from_schedule(conn, tsid, season_id)
-'''
+
+
+tsid = ensure_team_season(conn, school="Missouri", sport_key="mens-basketball", sport_name="Men's Basketball", year=2025, sport_slug="mens-basketball")
+upsert_games_from_schedule(conn, tsid, 5143)
+
 
 # GET WOMENS BASKETBALL SCHEDULE BY ID's - DONE
 
-'''
-for season_id, year in WOMENS_BASKETBALL_SEASONS.items():
-    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-basketball", sport_name="Women's Basketball", year=year, sport_slug="womens-basketball")
-    upsert_games_from_schedule(conn, tsid, season_id)
-'''
+
+
+tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-basketball", sport_name="Women's Basketball", year=2025, sport_slug="womens-basketball")
+upsert_games_from_schedule(conn, tsid, 5144)
+
 
 # GET SOFTBALL SCHEDULE BY ID's - DONE
 '''
@@ -317,11 +319,11 @@ for season_id, year in SOFTBALL_SEASONS.items():
 '''
 
 # GET VOLLEYBALL SCHEDULE BY ID's - DONE
-'''
-for season_id, year in VOLLEYBALL_SEASONS.items():
-    tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-volleyball", sport_name="Women's Volleyball", year=year, sport_slug="womens-volleyball")
-    upsert_games_from_schedule(conn, tsid, season_id)
-'''
+
+
+tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-volleyball", sport_name="Women's Volleyball", year=2025, sport_slug="womens-volleyball")
+upsert_games_from_schedule(conn, tsid, 5124)
+
 
 
 
@@ -628,7 +630,7 @@ for season_id, year in MENS_BASKETBALL_SEASONS.items():
 
 # GET WOMENS VOLLEYBALL STATS
 
-
+'''
 sess = Session()
 
 
@@ -672,7 +674,7 @@ for season_id, year in MENS_BASKETBALL_SEASONS.items():
 
         upsert_player_volleyball_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
         upsert_player_volleyball_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
-
+'''
 
 
 # GET SOFTBALL STATS
