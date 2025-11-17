@@ -22,6 +22,8 @@ from stats.football.parse_player_defense import get_player_football_defense_mu
 from stats.football.upsert_player_defense import upsert_player_football_defense_gamelog, upsert_player_football_defense_season_highs
 from stats.basketball.parse_player_stats import parse_player_basketball_stats, get_player_basketball_mu
 from stats.basketball.upsert_player_stats import upsert_player_basketball_gamelog, upsert_player_basketball_season_highs
+from stats.volleyball.parse_player_stats import parse_player_volleyball_stats, get_player_volleyball_mu
+from stats.volleyball.upsert_player_stats import upsert_player_volleyball_gamelog, upsert_player_volleyball_season_highs
 
 
 
@@ -90,6 +92,35 @@ YEARS = {
     "2002-03",
     "2001-02",
     "2000-01"
+}
+
+YEARS = {
+    "2025",
+    "2024",
+    "2023",
+    "2022",
+    "2021",
+    "2020",
+    "2019",
+    "2018",
+    "2017",
+    "2016",
+    "2015",
+    "2014",
+    "2013",
+    "2012",
+    "2011",
+    "2010",
+    "2009",
+    "2008",
+    "2007",
+    "2006",
+    "2005",
+    "2004",
+    "2003",
+    "2002",
+    "2001",
+    "2000"
 }
 
 
@@ -199,13 +230,14 @@ for year in YEARS:
 
 
 # GET VOLLEYBALL ROSTER
+
 '''
 for year in YEARS:
     tsid = ensure_team_season(conn, school="Missouri", sport_key="womens-volleyball", sport_name="Women's Volleyball", year=year, sport_slug="womens-volleyball")
     for person in get_roster_from_api('womens-volleyball', year):
         upsert_roster(conn, tsid, [person])
-'''
 
+'''
 
 
 
@@ -542,9 +574,9 @@ for season_id, year in FOOTBALL_SEASONS.items():
 
 
 
-# GET BASKETBALL PLAYER STATS (Men's and Women's)
+# GET BASKETBALL PLAYER STATS (Men's and Women's) 
 
-
+'''
 sess = Session()
 
 
@@ -588,21 +620,25 @@ for season_id, year in MENS_BASKETBALL_SEASONS.items():
 
         upsert_player_basketball_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
         upsert_player_basketball_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
-
+'''
     
 
 
 
 
+# GET WOMENS VOLLEYBALL STATS
 
 
+sess = Session()
 
 
-
-
-
-'''
-SELECT
+# Change seasons to womens
+for season_id, year in MENS_BASKETBALL_SEASONS.items():
+    with conn.cursor() as cur:
+        # Query all men's and women's players players (no need for offenseive or defensive)
+        cur.execute(
+        """
+        SELECT
             p.id,
             rm.roster_player_id
         FROM players p
@@ -610,9 +646,42 @@ SELECT
         JOIN team_seasons ts       ON ts.id = rm.team_season_id
         JOIN teams t               ON t.id = ts.team_id
         JOIN sports s              ON s.id = t.sport_id
-        WHERE s.key = 'mens-basketball'
-        AND ts.year = 2024
+        CROSS JOIN LATERAL (
+            SELECT regexp_split_to_array(upper(rm.position), '[^A-Z]+') AS pos_tokens
+        ) pt
+        WHERE s.key = 'womens-volleyball'
+        AND ts.year = %s
         AND rm.position IS NOT NULL
         AND rm.roster_player_id IS NOT NULL
-        ORDER BY p.id, ts.year DESC;
-'''
+        ORDER BY p.id, ts.year DESC
+        """,
+        (year,),
+        )
+        
+
+        players = cur.fetchall()
+
+    
+        print(f"Adding data for {len(players)} Women's Volleyball players")
+
+    for (player_id, roster_player_id) in players:
+        print(f"Player ID: {player_id} - Roster Player ID: {roster_player_id}")
+
+        parsed = get_player_volleyball_mu(sess, roster_player_id, year)
+        print("first 2 rows:", parsed["gamelog"][:2])
+
+        upsert_player_volleyball_gamelog(conn, player_id=player_id, rows=parsed["gamelog"])
+        upsert_player_volleyball_season_highs(conn, player_id=player_id, highs=parsed["season_highs"])
+
+
+
+# GET SOFTBALL STATS
+
+
+
+
+
+
+
+
+
