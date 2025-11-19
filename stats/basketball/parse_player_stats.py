@@ -77,8 +77,8 @@ def parse_player_basketball_stats(payload: Dict[str, Any]) -> Dict[str, List[Dic
 
 
 
-def get_player_basketball_mu(sess, roster_player_id: int, year: int) -> Dict[str, List[Dict[str, Any]]]:
-    sport = 'wbball'
+def get_player_basketball_mu(sess, roster_player_id: int, year: int, sport) -> Dict[str, List[Dict[str, Any]]]:
+
     data = fetch_mu_player_json(sess, roster_player_id, year, sport)
     parsed = parse_player_basketball_stats(data)
     print(f"[mu-json] gamelog={len(parsed['gamelog'])} highs={len(parsed['season_highs'])}")
