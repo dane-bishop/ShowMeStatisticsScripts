@@ -1,6 +1,6 @@
-from helpers.text import text
+from helpers.etc.text import text
 from helpers.core import COACH_WORDS
-from helpers.strip_label import strip_label
+from helpers.etc.strip_label import strip_label
 import re
 
 

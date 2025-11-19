@@ -14,7 +14,7 @@ from stats.scrape_sports_stats import scrape_sports_stats
 
 # Main parameters
 conn = get_db_connection()
-selected_sports = ["football", "mens-basketball", "womens-basketball", "womens-volleyball"]
+selected_sports = ["football"]
 year = 2025
 year_basketball = "2025-26"
 sess = Session()

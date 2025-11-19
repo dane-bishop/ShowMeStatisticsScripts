@@ -1,13 +1,13 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from helpers.make_session import make_session
+from helpers.etc.make_session import make_session
 import time, random
 from helpers.core import BASE
 from bs4 import BeautifulSoup
 from roster.roster_helpers.parse_player_row import parse_player_row
 from urllib.parse import urljoin
 from roster.roster_helpers.baseball.needs_enrich import needs_enrich
-from helpers.strip_sr_only_value import strip_sr_only_value
-from helpers.only_digits import only_digits
+from helpers.etc.strip_sr_only_value import strip_sr_only_value
+from helpers.etc.only_digits import only_digits
 from helpers.baseball.extract_bats_throws_from_card import extract_bats_throws_from_card, BT_PAT
 
 

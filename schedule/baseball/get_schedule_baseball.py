@@ -3,10 +3,10 @@ from bs4 import BeautifulSoup
 from helpers.core import BASE
 from schedule.schedule_helpers.clean_opponent import _clean_opponent
 from schedule.schedule_helpers.parse_game_card import parse_game_card
-from helpers.fetch import _fetch
+from helpers.etc.fetch import _fetch
 from urllib.parse import urljoin
 import re
-from helpers.make_session import make_session
+from helpers.etc.make_session import make_session
 from schedule.schedule_helpers.parse_game_card_any import parse_game_card_any
 from schedule.schedule_helpers.parse_text_schedule import parse_text_schedule
 

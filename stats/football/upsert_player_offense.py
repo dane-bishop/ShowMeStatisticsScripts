@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, Dict, Any, Optional
-from helpers.find_game_id_by_source import _find_game_id_by_source
+from helpers.etc.find_game_id_by_source import _find_game_id_by_source
 import re
 from datetime import datetime
 from stats.stats_helpers.parse_dt import _parse_dt 

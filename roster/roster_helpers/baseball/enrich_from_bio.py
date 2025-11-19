@@ -1,8 +1,8 @@
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from helpers.core import BASE
-from helpers._etch import fetch
-from helpers.text import text
+from helpers.etc.fetch import fetch
+from helpers.etc.text import text
 import re
 
 

@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 import psycopg2
 import re
-from helpers.make_session import make_session
+from helpers.etc.make_session import make_session
 from helpers.core import BASE
 from schedule.schedule_api_helpers.api_helpers import _to_int, _parse_iso_dt, _location_indicator_to_text, _extract_game_time
 

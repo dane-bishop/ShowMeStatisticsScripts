@@ -1,5 +1,4 @@
 from helpers.core import get_db_connection
-from helpers.queries import BASEBALL_HITTERS_SQL
 from requests import Session 
 from stats.baseball.parse_player_hitting import get_player_hitting_mu
 from stats.baseball.upsert_player_hitting import upsert_player_batting_gamelog, upsert_player_hitting_season_highs

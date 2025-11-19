@@ -1,5 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from helpers.make_session import make_session
+from helpers.etc.make_session import make_session
 from helpers.core import BASE
 from urllib.parse import urljoin
 from typing import Dict, Any, Generator
